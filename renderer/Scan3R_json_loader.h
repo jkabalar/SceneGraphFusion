@@ -6,7 +6,7 @@
 #define RELOCALIZATION3D_SCAN3R_JSON_LOADER_H
 
 #include <ORUtils/JsonUtil.h>
-namespace PSLAM::io {
+namespace PSLAM {
     class Scan3RLoader {
     public:
         struct MovedObject {

@@ -70,7 +70,7 @@ DatasetLoader_3RScan::DatasetLoader_3RScan(std::shared_ptr<DatasetDefinitionBase
         auto seq_folder = tools::PathTool::find_parent_folder(m_dataset->folder,1);
         auto seq_name = tools::PathTool::getFileName(seq_folder);
         auto data_folder = tools::PathTool::find_parent_folder(seq_folder,1);
-        auto scan3rLoader = PSLAM::io::Scan3RLoader(data_folder+"/3RScan.json");
+        auto scan3rLoader = PSLAM::Scan3RLoader(data_folder+"/3RScan.json");
         if(scan3rLoader.IsRescan(seq_name)) {
             // find ref scan ID
             auto ref_id = scan3rLoader.rescanToReference.at(seq_name);

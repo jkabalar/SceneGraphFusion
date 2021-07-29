@@ -49,7 +49,7 @@ namespace PSLAM {
         std::unordered_set<EdgePtr> edges;
         /// The idx of this node (label)
         int idx;
-        std::atomic_int instance_idx = 0;
+        std::atomic_int instance_idx ={0};
         bool mDebug = false;
         /// The last predicted semantic label of this node
         size_t time_stamp = 0;
@@ -58,7 +58,7 @@ namespace PSLAM {
         std::vector<SurfelPtr> selected_surfels;
         Eigen::Vector3f mCentroid, mStd, mBBox_min, mBBox_max;
         size_t lastUpdatePropertySize = 0;
-        std::atomic_bool mbNeedUpdateNodeFeature = false;
+        std::atomic_bool mbNeedUpdateNodeFeature = {false};
 
         Eigen::Vector3f centroid, pos_sum;
         Eigen::Vector3f bbox_max, bbox_min;

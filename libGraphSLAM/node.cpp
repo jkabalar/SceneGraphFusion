@@ -71,7 +71,7 @@ void Node::Remove(const int index_in_graph_old) {
         surfels.erase(index_in_graph_old);
     }
 
-    std::unique_lock lock_node(mMutNode);
+    std::unique_lock<std::mutex> lock_node(mMutNode);
     pos_sum -= surfel->pos;
     centroid = pos_sum / size;
     bool need_recal_bbox = surfel->pos==bbox_min || surfel->pos ==bbox_max;
