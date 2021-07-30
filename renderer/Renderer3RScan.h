@@ -88,7 +88,7 @@ namespace PSLAM {
             mModelRGB = std::make_unique<glUtil::Model>( m_folder + "/" + m_scanId +  "/mesh.refined.v2.obj");
 
             if (mb_toRef) {
-                auto scan3rLoader = std::make_unique<PSLAM::io::Scan3RLoader>(m_folder + "/3RScan.json");
+                auto scan3rLoader = std::make_unique<PSLAM::Scan3RLoader>(m_folder + "/3RScan.json");
 
                 if(scan3rLoader->IsRescan(m_scanId)) {
                     // find ref scan ID
