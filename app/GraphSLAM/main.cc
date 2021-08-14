@@ -151,7 +151,7 @@ int main(int argc, char** argv) {
         assert(file.is_open());
         std::getline(file, path, '\n');
     }
-    SCLOG(INFO) << "Buliding data loader...";
+    SCLOG(INFO) << "Building data loader...";
     std::shared_ptr<PSLAM::DatasetLoader_base> dataset_loader_;
     dataset_loader_.reset(PSLAM::DataLoaderFactory::Make(path));
     dataset_loader_->Reset();
