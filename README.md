@@ -49,6 +49,8 @@ git clone --recursive https://github.com/Microsoft/onnxruntime
 cd onnxruntime
 # For Linux
 ./build.sh --config RelWithDebInfo --build_shared_lib --parallel
+cd build/Linux/RelWithDebInfo
+sudo make install
 ```
 
 #### BUILD
