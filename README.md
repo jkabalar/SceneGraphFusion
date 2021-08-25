@@ -45,7 +45,7 @@ With graph prediction:
 ```
 # Onnxruntime
 # See https://github.com/microsoft/onnxruntime
-git clone --recursive https://github.com/Microsoft/onnxruntime
+git clone --recursive https://github.com/microsoft/onnxruntime/tree/v1.8.2 #careful, do not clone master (contains errors)
 cd onnxruntime
 # For Linux
 ./build.sh --config RelWithDebInfo --build_shared_lib --parallel
