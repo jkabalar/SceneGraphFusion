@@ -119,7 +119,7 @@ void GraphSLAMGUI::MainUI(){
     ImGui::Checkbox("FPS", &bShowFPS);
     ImGui::Checkbox("Use thread", &mpGraphSLAM->UseThread());
 
-    if(ImGui::Button("Run Prediciton")){
+    if(ImGui::Button("Run Prediction")){
         mpGraphSLAM->RunFullPrediction();
         bNeedUpdate = true;
     }
@@ -820,7 +820,7 @@ void GraphSLAMGUI::UI_Class_Relationships() {
     ImGui::SameLine();
     {
         ImGui::BeginGroup();
-        ImGui::TextUnformatted("Relationsihps");
+        ImGui::TextUnformatted("Relationships");
 
         const ImGuiWindowFlags child_flags = 0;
         const ImGuiID child_id = ImGui::GetID((void*)(intptr_t)1);
