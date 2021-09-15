@@ -138,6 +138,7 @@ bool DatasetLoader_3RScan::Retrieve() {
     }
     if (m_dataset->rotate_pose_img) {
         cv::rotate(m_d, m_d, cv::ROTATE_90_COUNTERCLOCKWISE);
+       
     }
     LoadPose(m_pose, pose_file_name_,m_dataset->rotate_pose_img);
     m_pose = m_poseTransform * m_pose;

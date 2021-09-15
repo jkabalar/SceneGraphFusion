@@ -4,7 +4,7 @@
 #define GL_SILENCE_DEPRECATION
 #endif
 #include <iostream>
-#include <dataLoader/dataset_loader_facotry.h>
+#include <dataLoader/dataset_loader_factory.h>
 #include "../../Utils/parser.hpp"
 #include <ORUtils/Logging.h>
 #include <ORUtils/PathTool.hpp>

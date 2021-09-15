@@ -5,7 +5,7 @@
 #include "GraphSLAMGUI.h"
 #include <ORUtils/PathTool.hpp>
 #include "../Utils/EvaluationHelper.h"
-#include <dataLoader/dataset_loader_facotry.h>
+#include <dataLoader/dataset_loader_factory.h>
 using namespace PSLAM;
 
 GraphSLAMGUI::GraphSLAMGUI(GraphSLAM *graphSlam, DatasetLoader_base *dataloader)

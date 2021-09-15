@@ -10,7 +10,7 @@ SET(sources
 )
 SET(headers
         include/dataLoader/dataset_loader.h
-        include/dataLoader/dataset_loader_facotry.h
+        include/dataLoader/dataset_loader_factory.h
 )
 
 ADD_LIBRARY(${targetname} ${sources} ${headers})
