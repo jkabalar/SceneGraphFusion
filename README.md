@@ -69,17 +69,16 @@ build with GUI or graph prediction, pass these options in cmake:
 ```
 cmake -DBUILD_GRAPHPRED=ON -DBUILD_GUI=ON ..
 ```
-Note that the graph prediction module is not yet released. You may encounter error if you build with `BUILD_GRAPHPRED=ON`. That part will be released soon.
 
 # Run
 ```
-./exe_GraphSLAM --pth_in path/to/3RScan/squence/
+./exe_GraphSLAM --pth_in path/to/3RScan/sequence/
 # or with GUI
-./exe_GraphSLAM_GUI --pth_in path/to/3RScan/squence/
+./exe_GraphSLAM_GUI --pth_in path/to/3RScan/sequence/
 # to see usage and options 
 ./exe_GraphSLAM --help
 # to run with graph prediction (need to build with graph predict)
-./exe_GraphSLAM_GUI --pth_in path/to/3RScan/squence/ --pth_model /path/to/the/traced/model/folder/
+./exe_GraphSLAM_GUI --pth_in path/to/3RScan/sequence/ --pth_model /path/to/the/traced/model/folder/
 ```
 
 We provide data loader for 3RScan dataset and ScanNet. In default, we use rendered view for both dataset. The rendered view
