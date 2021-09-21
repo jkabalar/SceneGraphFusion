@@ -44,8 +44,8 @@ apt install freeglut3-dev libglfw3-dev
 With graph prediction:
 ```
 # Onnxruntime
-# See https://github.com/microsoft/onnxruntime
-git clone --recursive https://github.com/microsoft/onnxruntime/tree/v1.8.2 #careful, do not clone master (contains errors)
+# See https://github.com/microsoft/onnxruntime for more information
+git clone --recursive https://github.com/microsoft/onnxruntime/tree/v1.8.2
 cd onnxruntime
 # For Linux
 ./build.sh --config RelWithDebInfo --build_shared_lib --parallel
