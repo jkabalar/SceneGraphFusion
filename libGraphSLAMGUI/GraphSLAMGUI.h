@@ -50,6 +50,8 @@ namespace PSLAM {
 
         void drawGL() override;
 
+        void SetDataLoader(DatasetLoader_base *dataloader);
+
         void SetRender(int width, int height, const std::string &path, bool align);
 
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW

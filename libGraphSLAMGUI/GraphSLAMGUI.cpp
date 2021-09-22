@@ -1156,6 +1156,10 @@ std::string GraphSLAMGUI::GetEdgeLabel(const Edge *edge){
     return text;
 }
 
+void GraphSLAMGUI::SetDataLoader(DatasetLoader_base *dataloader) {
+    mpDataLoader = dataloader;
+}
+
 void GraphSLAMGUI::SetRender(int width, int height, const std::string &path, bool align) {
 #ifdef COMPILE_WITH_ASSIMP
     std::string folder, scan_id;

@@ -40,8 +40,6 @@ namespace PSLAM {
 
         const int& GetFinalIndex() const { return frame_index_max; }
 
-        const DatasetDefinitionBase* GetBase() const {return m_dataset.get(); }
-
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     protected:
         std::shared_ptr<DatasetDefinitionBase> m_dataset;

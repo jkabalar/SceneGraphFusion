@@ -207,6 +207,8 @@ int main(int argc, char** argv) {
     PSLAM::GraphSLAMGUI gui(&graphSlam, dataset_loader_.get());
     if(params.use_render) gui.SetRender(dataset_loader_->GetCamParamDepth().width,dataset_loader_->GetCamParamDepth().height,path, true);
     gui.run();
+    SCLOG(INFO) << "setting dataloader...";
+    gui.SetDataLoader(dataset_loader_.get());
 #else
     SCLOG(INFO) << "start processing frames...";
     while (true) {
