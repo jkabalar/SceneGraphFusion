@@ -1,7 +1,9 @@
 #pragma once
 #include "dataset3RScan.h"
+#include "datasetRIO10.h"
 #include "datasetScanNet.h"
 #include "dataloader_3rscan.h"
+#include "dataloader_rio10.h"
 #include "dataloader_scannet.h"
 
 namespace PSLAM {
@@ -10,7 +12,6 @@ namespace PSLAM {
                 const std::string &pth, INPUTE_TYPE inputeType = DATASET_DETECT) {
             DatasetLoader_base *output = nullptr;
             // detect datatype by checking file name
-
             if(inputeType == DATASET_DETECT){
                 std::cerr << "detect data type: ";
                 if(pth.find(".sens") != std::string::npos || pth.find("scene") != std::string::npos) {
@@ -28,6 +29,12 @@ namespace PSLAM {
                     auto path = pth.back() == '/'? pth : pth+"/";
                     auto database = std::make_shared<Scan3RDataset>(inputeType, path);
                     output = new DatasetLoader_3RScan(database);
+                    break;
+                }
+                case DATASET_RIO10: {
+                    auto path = pth.back() == '/'? pth : pth+"/";
+                    auto database = std::make_shared<RIO10Dataset>(inputeType, path);
+                    output = new DatasetLoader_RIO10(database);
                     break;
                 }
                 case DATASET_SCANNET: {

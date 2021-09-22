@@ -1,25 +1,26 @@
 //
-// Created by sc on 1/13/21.
+// Created by Julia Kabalar on 21.09.2021.
 //
 
-#ifndef LIBSURFELRECONSTRUCTION_DATASET3RSCAN_H
-#define LIBSURFELRECONSTRUCTION_DATASET3RSCAN_H
+#ifndef LIBSURFELRECONSTRUCTION_DATASETRIO10_H
+#define LIBSURFELRECONSTRUCTION_DATASETRIO10_H
 
 #include "dataset_base.h"
 
 namespace PSLAM {
-    class Scan3RDataset : public DatasetDefinitionBase {
+    class RIO10Dataset : public DatasetDefinitionBase {
     public:
-        Scan3RDataset(INPUTE_TYPE type, const std::string &path)  {
+        RIO10Dataset(INPUTE_TYPE type, const std::string &path)  {
             datasetType = type;
+            is_rescan = true;
             folder = path;
-            frame_index_counter = 1;
+            frame_index_counter = 1; 
             number_length = 1;
             prefix_pose = "/frame-";
             prefix_depth = "/frame-";
             prefix_rgb = "/frame-";
 
-            suffix_depth = ".depth.pgm";
+            suffix_depth = ".rendered.depth.png";
             suffix_rgb = ".color.jpg";
             suffix_pose = ".pose.txt";
 
@@ -31,4 +32,4 @@ namespace PSLAM {
     };
 }
 
-#endif //LIBSURFELRECONSTRUCTION_DATASET3RSCAN_H
+#endif //LIBSURFELRECONSTRUCTION_DATASETRIO10_H

@@ -1,25 +1,26 @@
 //
-// Created by sc on 1/13/21.
+// Created by Julia Kabalar on 21.09.2021.
 //
-#include "../include/dataLoader/dataloader_3rscan.h"
+#include "../include/dataLoader/dataloader_rio10.h"
 #include "../include/dataLoader/util.h"
 #include "../include/dataLoader/Scan3R_json_loader.h"
 #include <ORUtils/Logging.h>
 
 #include <utility>
-#include <dataLoader/dataset3RScan.h>
+#include <dataLoader/datasetRIO10.h>
 #include <ORUtils/PathTool.hpp>
 
 using namespace PSLAM;
 
-DatasetLoader_3RScan::DatasetLoader_3RScan(std::shared_ptr<DatasetDefinitionBase> dataset):
-        DatasetLoader_base(std::move(dataset)) {
+
+DatasetLoader_RIO10::DatasetLoader_RIO10(std::shared_ptr<DatasetDefinitionBase> dataset):
+        DatasetLoader_3RScan(std::move(dataset)) {
     if(!PSLAM::LoadInfoIntrinsics(m_dataset->folder+"/_info.txt",true,m_cam_param_d))
         throw std::runtime_error("unable to open _info file");
     if(!PSLAM::LoadInfoIntrinsics(m_dataset->folder+"/_info.txt",false,m_cam_param_rgb))
         throw std::runtime_error("unable to open _info file");
     m_poseTransform.setIdentity();
-    if(reinterpret_cast<PSLAM::Scan3RDataset*>(m_dataset.get())->use_aligned_pose) {
+    if(reinterpret_cast<PSLAM::RIO10Dataset*>(m_dataset.get())->use_aligned_pose) {
         auto seq_folder = tools::PathTool::find_parent_folder(m_dataset->folder,1);
         auto seq_name = tools::PathTool::getFileName(seq_folder);
         auto data_folder = tools::PathTool::find_parent_folder(seq_folder,1);
@@ -29,32 +30,12 @@ DatasetLoader_3RScan::DatasetLoader_3RScan(std::shared_ptr<DatasetDefinitionBase
             auto ref_id = scan3rLoader.rescanToReference.at(seq_name);
             m_poseTransform = scan3rLoader.scaninfos.at(ref_id)->rescans.at(seq_name)->transformation;
             m_poseTransform.topRightCorner<3,1>()*=1e3;
+            m_dataset->is_rescan = true;
         }
     }
 }
 
-const std::string DatasetLoader_3RScan::GetFileName(const std::string& folder,
-                                                    const std::string& subfolder,
-                                                    const std::string& prefix,
-                                                    const std::string& suffix,
-                                                    int number_length = -1) const {
-    std::stringstream filename;
-    const std::string path = (folder == "/" ? "" : folder) +
-                             (subfolder == "/" ? "" : subfolder) +
-                             (prefix == "/" ? "" : prefix);
-    if (number_length < 0)
-        filename << path << (suffix == "/" ? "" : suffix);
-    else
-        filename << path << std::setfill('0') << std::setw(number_length) << frame_index << (suffix == "/" ? "" : suffix);
-    std::string s(filename.str());
-    return s;
-}
-
-bool DatasetLoader_3RScan::IsV2() const {
-    return  m_dataset->rotate_pose_img;
-}
-
-bool DatasetLoader_3RScan::Retrieve() {
+bool DatasetLoader_RIO10::Retrieve() {
     std::string depthFilename = GetFileName(m_dataset->folder,
                                             m_dataset->folder_depth,
                                             m_dataset->prefix_depth,
@@ -91,7 +72,6 @@ bool DatasetLoader_3RScan::Retrieve() {
     }
     if (m_dataset->rotate_pose_img) {
         cv::rotate(m_d, m_d, cv::ROTATE_90_COUNTERCLOCKWISE);
-       
     }
     LoadPose(m_pose, pose_file_name_,m_dataset->rotate_pose_img);
     m_pose = m_poseTransform * m_pose;
@@ -101,15 +81,6 @@ bool DatasetLoader_3RScan::Retrieve() {
 
 
 
-void DatasetLoader_3RScan::Reset() {
+void DatasetLoader_RIO10::Reset() {
     frame_index = 0;
-}
-
-Eigen::Matrix<float,4,4> DatasetLoader_3RScan::rotation_matrix_Z(const float rot) {
-    Eigen::Matrix<float,4,4> res = Eigen::Matrix<float,4,4>::Identity();
-    res << cos(rot), -sin(rot), 0, 0,
-            sin(rot), cos(rot), 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1;
-    return res;
 }
