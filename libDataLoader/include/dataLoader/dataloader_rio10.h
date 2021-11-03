@@ -15,7 +15,7 @@ namespace PSLAM {
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     private:
         std::string pose_file_name_ = "";
-
+        bool is_evaluation_format=false;
         Eigen::Matrix4f m_poseTransform;
     };
 }

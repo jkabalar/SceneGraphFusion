@@ -31,6 +31,39 @@ namespace PSLAM {
 //        std::cout << "pose\n"<< pose << "\n";
     }
 
+/*     static inline void LoadPoseFromQuaternion(Eigen::Matrix4f &pose, const std::string &path, bool rotate) {
+        pose.setIdentity();
+        std::ifstream file(path);
+        assert(file.is_open());
+        std::string filename;
+        float qw, qx, qy, qz, tx, ty, tz;
+        if (file.is_open()) {
+            file >> filename, qw, qx, qy, qz, tx, ty, tz;
+            Eigen::Quaterniond q = Eigen::Quaterniond(qw,qx,qy,qz);
+            pose = q.normalized().toRotationMatrix();
+            pose(0, 3) = tx;
+            pose(1, 3) = ty;
+            pose(2, 3) = tz;
+            pose.block<3, 1>(0, 3) *= 1000.0f;
+            file.close();
+        }
+//        std::cout << "pose\n"<< pose << "\n";
+    } */
+
+/*     void ReadLine(MatrixMap& poses, const std::string& line) {
+        std::string file_name;
+        std::istringstream iss(line);
+        Eigen::Vector3f translation(0,0,0);
+        Eigen::Quaternionf rotation;
+        iss >> file_name >> rotation.w() >> rotation.x() >> rotation.y() >> rotation.z()
+            >> translation(0) >> translation(1) >> translation(2);
+        Eigen::Matrix4f matrix = Eigen::Matrix4f::Identity();
+        matrix.block<3,3>(0,0) = Eigen::Matrix3f(rotation);
+        matrix.block<3,1>(0,3) = translation;
+        if (IsValidMatrix(matrix))
+            poses[file_name] = matrix;
+    } */
+
     static inline const std::vector<std::string> split(const std::string s, const std::string delim) {
     std::vector<std::string> list;
     auto start = 0U;

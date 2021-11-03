@@ -46,11 +46,18 @@ bool DatasetLoader_RIO10::Retrieve() {
                                             m_dataset->prefix_rgb,
                                             m_dataset->suffix_rgb,
                                             m_dataset->number_length);
-    pose_file_name_ = GetFileName(m_dataset->folder,
-                                  m_dataset->folder_pose,
-                                  m_dataset->prefix_pose,
-                                  m_dataset->suffix_pose,
-                                  m_dataset->number_length);
+    if (is_evaluation_format) {
+        pose_file_name_ = GetFileName(m_dataset->folder,
+                                    m_dataset->folder_pose,
+                                    m_dataset->prefix_pose,
+                                    m_dataset->suffix_pose, -1);
+    } else {
+        pose_file_name_ = GetFileName(m_dataset->folder,
+                                    m_dataset->folder_pose,
+                                    m_dataset->prefix_pose,
+                                    m_dataset->suffix_pose,
+                                    m_dataset->number_length);
+    }
     bool isExist = isFileExist(depthFilename);
     if (!isExist) {
         frame_index = 0;
@@ -73,7 +80,10 @@ bool DatasetLoader_RIO10::Retrieve() {
     if (m_dataset->rotate_pose_img) {
         cv::rotate(m_d, m_d, cv::ROTATE_90_COUNTERCLOCKWISE);
     }
-    LoadPose(m_pose, pose_file_name_,m_dataset->rotate_pose_img);
+    if (!is_evaluation_format) {
+        //LoadPoseFromQuaternion(m_pose, pose_file_name_,m_dataset->rotate_pose_img);
+        LoadPose(m_pose, pose_file_name_,m_dataset->rotate_pose_img);
+    }   
     m_pose = m_poseTransform * m_pose;
     frame_index += m_dataset->frame_index_counter;
     return true;

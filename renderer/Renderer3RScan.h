@@ -51,6 +51,12 @@ namespace PSLAM {
 
             // Render RGB & Depth
             DrawScene(mModelRGB.get(), mShaderRGB.get());
+            
+
+            //cv::Mat m_boundingbox;
+            //DrawBoundingBox(m_boundingbox, m_bbox);
+
+
             RenderRGB(m_rgb);
             cv::flip(m_rgb, m_rgb, 0);
             cv::cvtColor(m_rgb, m_rgb, cv::COLOR_RGB2BGR);
@@ -68,19 +74,24 @@ namespace PSLAM {
 //            applyColorMap(adjMap, adjMap, cv::COLORMAP_TURBO);
 //            cv::imshow("label", label);
 //            cv::imshow("rgb", rgb);
+
+
 //            cv::imshow("adjMap", adjMap);
 //            cv::waitKey(0);
 
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
 //        float mNearPlane, mFarPlane;
+
     private:
         bool mb_toRef; // move mesh to the frame of reference scan
         std::unique_ptr<glUtil::Shader> mShaderLabel, mShaderRGB;
         std::unique_ptr<glUtil::Model> mModelLabel, mModelRGB;
         std::unordered_map<unsigned long, int> m_color2instances;
+        std::unordered_map<int,unsigned long> m_instances2color;
         std::unordered_map<int, std::string> m_instances2label;
         cv::Mat m_label, m_instance;
+        std::unordered_map<int,Eigen::Vector4i> m_bbox;
 
         void Init(){
             // Load 3RScan and mesh data
@@ -139,6 +150,69 @@ namespace PSLAM {
             }
         }
 
+        void RenderInstance(const cv::Mat &labelImg, cv::Mat &instanceImg, std::unordered_map<int,Eigen::Vector4i> &bbox) {
+            instanceImg = cv::Mat(m_height, m_width, CV_16UC1);
+
+            auto RGB2Hex = [](int r, int g, int b) -> unsigned long{
+                return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+            };
+            bbox.clear();
+//            std::map<int,int> instanceCounter;
+            for (int i = 0; i < m_width; i++) {
+                for (int j = 0; j < m_height; j++) {
+                    const cv::Vec3b& vec = labelImg.at<cv::Vec3b>(j, i);
+                    const unsigned long color_hex = RGB2Hex(vec(0), vec(1), vec(2));
+                    if (m_color2instances.find(color_hex) != m_color2instances.end()) {
+                        const int Id = m_color2instances[color_hex]; // instance ID
+                        instanceImg.at<unsigned short>(j, i) = Id;
+
+//                        instanceCounter[Id] ++;
+
+                        /*bounding box*/
+                        if(bbox.find(Id) == bbox.end()) {
+                            bbox[Id] = {i,j,i,j};
+                        } else {
+                            bbox[Id](0) = MIN(i, bbox[Id](0));
+                            bbox[Id](1) = MIN(j, bbox[Id](1));
+                            bbox[Id](2) = MAX(MAX(i, bbox[Id](2)),bbox[Id](0));
+                            bbox[Id](3) = MAX(MAX(j, bbox[Id](3)),bbox[Id](1));
+                        }
+                    } else instanceImg.at<unsigned short>(j, i) = 0;
+                }
+            }
+
+//            for(auto pair :instanceCounter){
+//                std::cout << pair.first << ": " << pair.second << "\n";
+//            }
+        }
+        void DrawBoundingBox(cv::Mat &img, const std::unordered_map<int,Eigen::Vector4i> &bbox) {
+            img = cv::Mat(m_height, m_width, CV_8UC3);
+            //std::cout << "width" << m_width << "height " << m_height << std::endl;
+            auto RGB2Hex = [](int r, int g, int b) -> unsigned long{
+                return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+            };
+            for (auto element : bbox)
+            {
+                //std::cout << element.first << ": " << element.second << "\n";
+                std::cout << element.first << ": " << m_instances2label[ element.first ] << std::endl;
+                const int minHeight = element.second(1);
+                const int minWidth = element.second(0);
+                const int boundingBoxHeight = element.second(3) - minHeight;
+                const int boundingBoxWidth = element.second(2) - minWidth;
+                //std::cout << "width" << boundingBoxWidth << "height " << boundingBoxHeight << std::endl;
+                //std::cout << "minWidth" << minWidth << "minHeight " << minHeight << std::endl;
+                for (int i = 0; i < boundingBoxWidth; i++) {
+                    img.at<unsigned short>(minHeight,minWidth+i) = (255,0,0);
+                    img.at<unsigned short>(element.second(3),minWidth+i) = (255,0,0);
+                }
+                for (int j = 0; j < boundingBoxHeight; j++) {
+                    img.at<unsigned short>(minHeight+j,minWidth) = (255,0,0);
+                    img.at<unsigned short>(minHeight+j,element.second(2)) = (255,0,0);
+                        
+                }
+            }
+        }
+
         void RenderDepth(cv::Mat &img, float near, float far) {
             img = cv::Mat::zeros(m_height, m_width, CV_32F);
             glReadPixels(0, 0,m_width,m_height, GL_DEPTH_COMPONENT, GL_FLOAT, img.data);
@@ -175,6 +249,7 @@ namespace PSLAM {
                     iss >> std::hex >> color_hex;
                     m_color2instances[color_hex] = id;
                     m_instances2label[id] = obj["label"].string_value();
+                    m_instances2color[id] = color_hex;
                 }
             }
             return !m_color2instances.empty();
